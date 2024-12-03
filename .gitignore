@@ -1,9 +1,0 @@
-!.gitignore
-# Ignore everything by default
-
-# Don't ignore specific file types
-!.cpp
-!.c
-!.h
-!.hpp
-!.txt
