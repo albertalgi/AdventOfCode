@@ -17,26 +17,46 @@ using namespace std;
 
 bool isReportValid(vector<int> report) {
     int ascending = 2;//Initial state
-    cout << "Report size : " << report.size() << endl;
+    cout << "\nReport size : " << report.size() << endl;
 
     for (vector<int>::iterator it = report.begin(); it < report.end() - 1; ++it) { //it < report.end() - 1 --> Because we want to avoid n + 1 out of range
-        cout <<*it << *(it + 1) << " ";
-        if ((abs(*it - *(it + 1)) - 3 > 0) || (*it - *(it+1) == 0)) { // Distance between djacents greater that 3 or are equal numbers
+        cout << *it << *(it + 1) << " ";
+        if ((abs(*it - *(it + 1)) - 3 > 0) || (*it - *(it + 1) == 0)) { // Distance between djacents greater that 3 or are equal numbers
             return false;
         }
-        if (*it - *(it + 1) > 0) { //Ascending
-            if (ascending == 0)
-                return false;//Was not ascending before
+        else if (*it - *(it + 1) > 0) { //Descending
+            if (ascending == 0) {
+                return false;
+            }
             ascending = 1;
         }
-        else {
-            if (ascending == 1)
-                return false;//Was not ascending before
+        else { //Ascending
+            if (ascending == 1) {
+                return false;
+            }
             ascending = 0;
         }
     }
     cout << " SAFE!" << endl;
     return true;
+}
+
+bool isReportValid2(vector<int> report) {
+    if(isReportValid(report))
+        return true;
+
+    vector<int> reportMinusOne;
+    for (vector<int>::iterator it1 = report.begin(); it1 < report.end(); ++it1) {
+        reportMinusOne.clear();
+        for (vector<int>::iterator it2 = report.begin(); it2 < report.end(); ++it2) {
+            if (it2 != it1) { //Ignore current element
+                reportMinusOne.push_back(*it2);
+            }
+        }
+        if (isReportValid(reportMinusOne))
+            return true;
+    }
+    return false;
 }
 
 /*
@@ -47,14 +67,14 @@ int getReportStatus(string inputReport) {
 
     istringstream stream(inputReport);
     string auxString;
-    
+
     vector<int> report;
 
     while (stream >> auxString) {
         report.push_back(stoi(auxString));
     }
-    
-    if(isReportValid(report))
+
+    if (isReportValid2(report))
         return 1;
     return 0;
 }
