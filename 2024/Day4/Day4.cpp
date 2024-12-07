@@ -166,7 +166,7 @@ int getCrossMAS(vector<string> lines) {
                             count++;
                         }
                     }
-                    partial = false;
+                    partial = false; //Reset partial flag
                 }                
             }
         } while (position != string::npos);
