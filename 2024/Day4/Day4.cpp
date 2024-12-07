@@ -9,7 +9,7 @@
 #include <string>
 
 using namespace std;
-
+// Serach for horizontal XMAS or SAMX
 int findHorizontalXMAS(string line) {
     int count = 0;
     
@@ -127,6 +127,54 @@ int verticalAndDiagonalXMAS(vector<string> lines) {
     return count;
 }
 
+//Search from top to bottom
+int getCrossMAS(vector<string> lines) {
+    int count = 0;
+    int position; //Position of A
+    bool partial = false;
+
+    for (int i = 1; i < lines.size() - 1; i++) {// 1 rows of margin to avoid out of range. It also starts at secind row since in has to be a cross MAS
+        position = -1;
+        do {//left to right
+            position = lines[i].find("A", position + 1);
+            if (lines[i].size() - position > 1 && position > 0 && position != string::npos && position != -1) {
+                //Check Cross since A is in the middle of it
+                if (lines[i - 1][position + 1] == 'M') { //Top right is an M
+                    if (lines[i + 1][position - 1] == 'S') {//Bottom left is an S
+                        partial = true;
+                    }
+                    else {
+                        partial = false;
+                    }
+                }
+                else if (lines[i - 1][position + 1] == 'S') { //Top right is an S
+                    if (lines[i + 1][position - 1] == 'M') {//Bottom left is an M
+                        partial = true;
+                    }
+                    else {
+                        partial = false;
+                    }
+                }
+                if (partial) { //If partial cross MAS proceed, otherwise skip nfollowing logic
+                    if (lines[i - 1][position - 1] == 'M') { //Top left is an M
+                        if (lines[i + 1][position + 1] == 'S') {//Bottom right is an S
+                            count++;
+                        }
+                    }
+                    else if (lines[i - 1][position - 1] == 'S') { //Top left is an S
+                        if (lines[i + 1][position + 1] == 'M') {//Bottom right is an M
+                            count++;
+                        }
+                    }
+                    partial = false;
+                }                
+            }
+        } while (position != string::npos);
+    }
+
+    return count;
+}
+
 int main()
 {
     vector<string> xmasLines;
@@ -140,7 +188,7 @@ int main()
         string line;
         while (getline(input, line)) {
             //Fill vector of vectors
-            totalXMAS += findHorizontalXMAS(line);
+            //totalXMAS += findHorizontalXMAS(line); //Part 1
             xmasLines.push_back(line);
             //cout << line << endl;
         }
@@ -149,6 +197,7 @@ int main()
         input.close();
     }
 
-    totalXMAS += verticalAndDiagonalXMAS(xmasLines);
+    //totalXMAS += verticalAndDiagonalXMAS(xmasLines); //Part 1
+    totalXMAS = getCrossMAS(xmasLines);
     cout << totalXMAS;
 }
